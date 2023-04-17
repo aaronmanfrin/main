@@ -13,8 +13,8 @@ options = Options()
 options.page_load_strategy = 'normal'
 options.add_experimental_option('detach',True)
 options.add_argument(r"--user-data-dir=/Users/aarondsouza/Library/Application Support/Google/Chrome/")
-options.add_argument("--headless")
-options.add_argument('window-size=1920x1080')
+options.add_argument("--headless") ## so browser does not actually open
+options.add_argument('window-size=1920x1080') ## so the virtual browser can click on elements
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),options=options) ##creating a driver instance
 
