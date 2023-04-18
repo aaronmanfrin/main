@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{%block content%} <!-- linking this body portion to the block content on out layouts page-->
+    <h1>Home Page</h1>
+    {%for post in posts%} <!-- this is how we run a for loop in html and link it to the flask file; code block is represented by curly brace and percent sign; posts is gotten from flask file where posts= is the variable-->
+        <article class="media content-section"> <!-- imported corey schafer article html code snippet-->
+            <div class="media-body">
+              <div class="article-metadata">
+                <a class="mr-2" href="#">{{ post.author }}</a>
+                <small class="text-muted">{{ post.date_posted }}</small>
+              </div>
+              <h2><a class="article-title" href="#">{{ post.title }}</a></h2> <!-- this is inside the for loop, we specify what to run with doouble curly braces-->
+              <p class="article-content">{{ post.content }}</p>
+            </div>
+          </article>
+    {% endfor %} <!-- ending the for loop-->
+
+{%endblock content %}
+        
