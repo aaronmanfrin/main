@@ -39,25 +39,34 @@
             </nav>
         </header>
 
-        <main role="main" class="container"><!-- adding in container witch is a javascript bootstrap class to give nice padding-->
-            <div class="row">
-              <div class="col-md-8">
-                {% block content %}{% endblock %} <!-- creating a block section for the differences in our html pages; did not need to be called content couold have called it anything-->
-              </div>
-              <div class="col-md-4">
-                <div class="content-section">
-                  <h3>Our Sidebar</h3>
-                  <p class='text-muted'>You can put any information here you'd like.
-                    <ul class="list-group">
-                      <li class="list-group-item list-group-item-light">Latest Posts</li>
-                      <li class="list-group-item list-group-item-light">Announcements</li>
-                      <li class="list-group-item list-group-item-light">Calendars</li>
-                      <li class="list-group-item list-group-item-light">etc</li>
-                    </ul>
-                  </p>
-                </div>
+        <main role="main" class="container">
+          <div class="row">
+            <div class="col-md-8">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+              {% block content %}{% endblock %}
+            </div>
+            <div class="col-md-4">
+              <div class="content-section">
+                <h3>Our Sidebar</h3>
+                <p class='text-muted'>You can put any information here you'd like.
+                  <ul class="list-group">
+                    <li class="list-group-item list-group-item-light">Latest Posts</li>
+                    <li class="list-group-item list-group-item-light">Announcements</li>
+                    <li class="list-group-item list-group-item-light">Calendars</li>
+                    <li class="list-group-item list-group-item-light">etc</li>
+                  </ul>
+                </p>
               </div>
             </div>
+          </div>
         </main>
 
         <!-- Optional JavaScript -->

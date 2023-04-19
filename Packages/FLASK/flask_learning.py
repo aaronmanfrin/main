@@ -1,3 +1,6 @@
+from flask import Flask, render_template, url_for, flash, redirect
+from forms import LoginForm, RegistrationForm
+
 ## Learning Flask for web-app
  #- user management
  #- blog style website
@@ -7,10 +10,17 @@
  #- add new post
  #- look at other ppl's post
  #- update/ delete posts
+ # - pip install flask-wtf to create forms for registration page
  
 
 ## pip install flask
-from flask import Flask, render_template, url_for
+
+##importing our login and reg forms from other py file
+
+
+
+app = Flask(__name__) ##creating app variable and setting it to instance of flask class
+app.config['SECRET_KEY'] = 'a3f84f693c16c7bf18766ab1e34f2fc8559e0f34b37d47d881ddc3c0abd1c6dd' ##secretkey to protect our site
 
 posts = [ ## adding in dummy blog posts as a list of dictionaries
     {
@@ -26,7 +36,6 @@ posts = [ ## adding in dummy blog posts as a list of dictionaries
         'date_posted':' April 18 2023'
     }
 ]
-app = Flask(__name__) ##creating app variable and setting it to instance of flask class
 
 @app.route("/") ## route decorator to tell us different pages
 @app.route("/home") ## will act as another route to the same page
@@ -42,6 +51,27 @@ def home():
 @app.route("/about") ## will create a route to an about page
 def about():
     return render_template('about.html',title='About') ## adding a title to be passed into the title section of html
+
+
+@app.route("/register", methods=['GET','POST']) ## accepting get and post requests
+def register():
+    form = RegistrationForm()## creating instance from our imported file
+    if form.validate_on_submit():
+        flash(f'Account created for {form.username.data}!','success') ## flashing message if the data validation is successful
+        return redirect(url_for('home'))
+    return render_template('register.html', title='Register', form=form)## when route is called it will render the html file, and the form variable will pass in our form function
+
+@app.route("/login")
+def login():
+    form = LoginForm()## creating instance from our imported file
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
+    return render_template('login.html', title='Login', form=form)## when route is called it will render the html file, and the form variable will pass in our form function
+
 
 if __name__ == '__main__': ## running our app directly using python and avoid enviroment variables, only works if we run it directly
     app.run(debug=True)
