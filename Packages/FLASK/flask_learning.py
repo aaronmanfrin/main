@@ -1,4 +1,7 @@
-from flask import Flask, render_template, url_for, flash, redirect
+from datetime import datetime
+
+from flask import Flask, flash, redirect, render_template, url_for
+from flask_sqlalchemy import SQLAlchemy
 from forms import LoginForm, RegistrationForm
 
 ## Learning Flask for web-app
@@ -21,6 +24,29 @@ from forms import LoginForm, RegistrationForm
 
 app = Flask(__name__) ##creating app variable and setting it to instance of flask class
 app.config['SECRET_KEY'] = 'a3f84f693c16c7bf18766ab1e34f2fc8559e0f34b37d47d881ddc3c0abd1c6dd' ##secretkey to protect our site
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///site.db' ## creating a sqllite database path adn config
+db = SQLAlchemy(app)##sql alchemy instance
+
+class User(db.Model): ## creating a class to represent out users in the sql database
+    id = db.Column(db.Integer,primary_key=True) ##user id
+    username = db.Column(db.String(20),unique=True,nullable=False) ##username
+    email = db.Column(db.String(120),unique=True,nullable=False) ##email
+    image_file = db.Column(db.String(20),nullable=False,default = 'default.jpg') ##image
+    password = db.Column(db.String(60),nullable=False) ##pw
+    post = db.relationship('Post',backref='author',lazy=True) ## post attribute to relate to post model
+
+    def __repr__(self):
+        return f"User('{self.username}','{self.email}','{self.image_file}')" ## what shows when we print this
+
+class Post(db.Model):
+    id = db.Column(db.Integer,primary_key=True)
+    title = db.Column(db.String(100),nullable=False)
+    date_posted = db.Column(db.DateTime,nullable=False,default=datetime.utcnow)
+    content = db.Column(db.Text,nullable=False)
+    title = db.Column(db.String(100),nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    def __repr__(self):
+        return f"User('{self.title}','{self.date_posted}')"
 
 posts = [ ## adding in dummy blog posts as a list of dictionaries
     {
@@ -79,3 +105,11 @@ if __name__ == '__main__': ## running our app directly using python and avoid en
 
 
 ## create a templates folder to store the html files and css files
+##orm is object relational mapper, allows us to access a database in an object oriented way using sql alchemy
+## need to pip install flask-sqlalchemy
+
+
+
+
+
+
